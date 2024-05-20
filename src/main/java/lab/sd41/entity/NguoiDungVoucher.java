@@ -1,7 +1,6 @@
-package it.lab.entity;
+package lab.sd41.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import it.lab.enums.LoaiGiam;
 import it.lab.enums.TrangThaiNguoiDungVoucher;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

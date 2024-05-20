@@ -1,4 +1,4 @@
-package it.lab.entity;
+package lab.sd41.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.lab.enums.TrangThaiSanPhamChiTiet;
@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

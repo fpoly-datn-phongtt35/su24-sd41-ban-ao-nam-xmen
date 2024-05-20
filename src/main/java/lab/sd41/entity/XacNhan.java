@@ -1,4 +1,4 @@
-package it.lab.entity;
+package lab.sd41.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
