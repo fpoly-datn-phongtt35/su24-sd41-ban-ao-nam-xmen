@@ -1,6 +1,6 @@
-package it.lab.config;
+package lab.sd41.config;
 
-import it.lab.dto.NguoiDungDTO;
+import lab.sd41.dto.NguoiDungDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

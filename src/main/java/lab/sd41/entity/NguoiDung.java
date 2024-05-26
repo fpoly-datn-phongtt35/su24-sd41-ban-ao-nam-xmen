@@ -1,8 +1,8 @@
 package lab.sd41.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import it.lab.enums.TrangThaiNguoiDung;
 import jakarta.persistence.*;
+import lab.sd41.enums.TrangThaiNguoiDung;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,14 +45,6 @@ public class NguoiDung {
     private LocalDateTime ngayTao;
     @Column(name = "ngaycapnhat")
     private LocalDateTime ngayCapNhat;
-    @JoinColumn(name = "rankkhachhang")
-    @ManyToOne
-    @JsonIgnore
-    private RankKhachHang rankKhachHang;
-    @OneToMany(mappedBy = "nguoiDung")
-    @JsonIgnore
-    private List<BinhLuanDanhGia> binhLuanDanhGiaList;
-    @OneToMany(mappedBy = "nguoiDung")
     @JsonIgnore
     private List<DiaChi> diaChiList;
     @OneToMany(mappedBy = "nguoiMua")

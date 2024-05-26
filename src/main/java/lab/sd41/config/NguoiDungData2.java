@@ -1,7 +1,7 @@
-package it.lab.config;
+package lab.sd41.config;
 
-import it.lab.entity.NguoiDung;
-import it.lab.entity.Quyen;
+import lab.sd41.entity.NguoiDung;
+import lab.sd41.entity.Quyen;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

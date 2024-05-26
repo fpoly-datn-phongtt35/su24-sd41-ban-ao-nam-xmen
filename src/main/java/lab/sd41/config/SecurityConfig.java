@@ -1,4 +1,4 @@
-package it.lab.config;
+package lab.sd41.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

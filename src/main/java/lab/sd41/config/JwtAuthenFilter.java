@@ -1,4 +1,4 @@
-package it.lab.config;
+package lab.sd41.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
