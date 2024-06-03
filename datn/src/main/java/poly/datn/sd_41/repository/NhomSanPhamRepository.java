@@ -6,4 +6,5 @@ import poly.datn.sd_41.entity.NhomSanPham;
 
 @Repository
 public interface NhomSanPhamRepository extends JpaRepository<NhomSanPham,Long> {
+    public boolean existsByTenNhomEquals(String ten);
 }

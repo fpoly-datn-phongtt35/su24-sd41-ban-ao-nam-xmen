@@ -14,6 +14,9 @@ import poly.datn.sd_41.modelcustom.request.FilterSanPham;
 import poly.datn.sd_41.modelcustom.request.SanPhamChiTietRequest;
 import poly.datn.sd_41.modelcustom.request.SanPhamRequest;
 import poly.datn.sd_41.repository.ChatLieuRepository;
+import poly.datn.sd_41.repository.NhomSanPhamRepository;
+import poly.datn.sd_41.repository.SanPhamRepo;
+import poly.datn.sd_41.repository.ThietKeRepository;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -22,7 +25,13 @@ import java.util.List;
 @Service
 public class SanPhamService implements ISanPhamService {
     @Autowired
+    private SanPhamRepo _sanPhamRepository;
+    @Autowired
     private ChatLieuRepository _chatLieuRepo;
+    @Autowired
+    private NhomSanPhamRepository _nhomSanPhamRepo;
+    @Autowired
+    private ThietKeRepository _thietKeRepo;
 
     @Override
     public SanPham findById(Long id) {
@@ -85,27 +94,46 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<NhomSanPhamDTO> layHetNhomSanPham() {
-        return null;
+        return new Page<NhomSanPhamDTO>(NhomSanPhamDTO.fromCollection(_nhomSanPhamRepo.findAll()), 0, 10000);
     }
 
     @Override
     public Page<NhomSanPhamDTO> xoaNhomSanPham(Long nhomSanPhamId) {
-        return null;
+        NhomSanPham nhomSanPham = _nhomSanPhamRepo.findById(nhomSanPhamId).get();
+        if (_sanPhamRepository.existsByNhomSanPham(nhomSanPham)) {
+            return null;
+        }
+        _nhomSanPhamRepo.deleteById(nhomSanPhamId);
+        return layHetNhomSanPham();
     }
 
     @Override
     public Page<NhomSanPhamDTO> suaNhomSanPham(NhomSanPham nhomSanPham) {
-        return null;
+        if (_nhomSanPhamRepo.existsByTenNhomEquals(nhomSanPham.getTenNhom())) {
+            return null;
+        }
+        NhomSanPham nhomSanPhamGoc = _nhomSanPhamRepo.findById(nhomSanPham.getId()).get();
+        nhomSanPhamGoc.setTenNhom(nhomSanPham.getTenNhom());
+        nhomSanPhamGoc.setNgayCapNhat(LocalDateTime.now());
+        _nhomSanPhamRepo.save(nhomSanPhamGoc);
+        return layHetNhomSanPham();
     }
 
     @Override
     public Page<NhomSanPhamDTO> themNhomSanPham(NhomSanPham nhomSanPham) {
-        return null;
+        if (_nhomSanPhamRepo.existsByTenNhomEquals(nhomSanPham.getTenNhom())) {
+            return null;
+        }
+        nhomSanPham.setNgayTao(LocalDateTime.now());
+        _nhomSanPhamRepo.save(nhomSanPham);
+        nhomSanPham.setMaNhom("NSP" + nhomSanPham.getId());
+        _nhomSanPhamRepo.save(nhomSanPham);
+        return layHetNhomSanPham();
     }
 
     @Override
     public NhomSanPhamDTO layNhomSanPhamById(Long nhomSanPhamId) {
-        return null;
+        return NhomSanPhamDTO.fromEntity(_nhomSanPhamRepo.findById(nhomSanPhamId).get());
     }
 
     @Override
@@ -115,32 +143,51 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public ChatLieuDTO layChatLieuById(Long chatLieuId) {
-        return null;
+        return ChatLieuDTO.fromEntity(_chatLieuRepo.findById(chatLieuId).get());
     }
 
     @Override
     public Page<ThietKeDTO> layHetThietKe() {
-        return null;
+        return new Page<ThietKeDTO>(ThietKeDTO.fromCollection(_thietKeRepo.findAll()), 0, 10000);
     }
 
     @Override
     public Page<ThietKeDTO> xoaThietKe(Long thietKeId) {
-        return null;
+        ThietKe thietKe = _thietKeRepo.findById(thietKeId).get();
+        if (_sanPhamRepository.existsByThietKe(thietKe)) {
+            return null;
+        }
+        _thietKeRepo.deleteById(thietKeId);
+        return layHetThietKe();
     }
 
     @Override
     public Page<ThietKeDTO> suaThietKe(ThietKe thietKe) {
-        return null;
+        if (_thietKeRepo.existsByTenThietKeEquals(thietKe.getTenThietKe())) {
+            return null;
+        }
+        ThietKe thietKeGoc = _thietKeRepo.findById(thietKe.getId()).get();
+        thietKeGoc.setTenThietKe(thietKe.getTenThietKe());
+        thietKeGoc.setNgayCapNhat(LocalDateTime.now());
+        _thietKeRepo.save(thietKeGoc);
+        return layHetThietKe();
     }
 
     @Override
     public Page<ThietKeDTO> themThietKe(ThietKe thietKe) {
-        return null;
+        if (_thietKeRepo.existsByTenThietKeEquals(thietKe.getTenThietKe())) {
+            return null;
+        }
+        thietKe.setNgayTao(LocalDateTime.now());
+        _thietKeRepo.save(thietKe);
+        thietKe.setMaThietKe("TK" + thietKe.getId());
+        _thietKeRepo.save(thietKe);
+        return layHetThietKe();
     }
 
     @Override
     public ThietKeDTO layThietKeById(Long thietKeId) {
-        return null;
+        return ThietKeDTO.fromEntity(_thietKeRepo.findById(thietKeId).get());
     }
 
     @Override
