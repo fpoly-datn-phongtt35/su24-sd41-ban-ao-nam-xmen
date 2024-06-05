@@ -88,4 +88,25 @@ public class SanPhamController {
     public ResponseEntity<?> layThietKeById(@RequestParam Long thietKeId) {
         return ResponseEntity.ok(_sanPhamService.layThietKeById(thietKeId));
     }
+
+    @RequestMapping(value = "/themsanpham", method = RequestMethod.POST)
+    public ResponseEntity<?> themSanPham(@RequestPart("file1") MultipartFile data1, @RequestPart("file2") MultipartFile data2, @RequestPart("data") String sanPham) throws IOException {
+        Gson gson = new Gson();
+        return ResponseEntity.ok(_sanPhamService.themSanPham(gson.fromJson(sanPham, SanPhamRequest.class), data1, data2));
+    }
+
+    @RequestMapping(value = "/laysanphamId", method = RequestMethod.GET)
+    public ResponseEntity<?> laySanPhamBy(@RequestParam Long sanPhamId) {
+        return ResponseEntity.ok(_sanPhamService.laySanPhamById(sanPhamId));
+    }
+
+    @RequestMapping(value = "/capnhatsanpham", method = RequestMethod.POST)
+    public ResponseEntity<?> suaSanPham(@RequestPart("file1") Optional<MultipartFile> data1,
+                                        @RequestPart("file2") Optional<MultipartFile> data2,
+                                        @RequestPart("data") String sanPham) throws IOException {
+        Gson gson = new Gson();
+        return ResponseEntity.ok(_sanPhamService.capNhatSanPham(gson.fromJson(sanPham, SanPhamRequest.class),
+                data1.isPresent() ? data1.get() : null,
+                data2.isPresent() ? data2.get() : null));
+    }
 }

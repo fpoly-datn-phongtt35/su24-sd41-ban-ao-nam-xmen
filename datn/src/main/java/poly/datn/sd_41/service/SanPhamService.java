@@ -35,7 +35,7 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public SanPham findById(Long id) {
-        return null;
+        return _sanPhamRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -50,7 +50,11 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public SanPhamChiTiet chiTietSanPham(Long sanPhamId) {
-        return null;
+        Optional<SanPham> sp = _sanPhamRepository.findById(sanPhamId);
+        if (sp.isEmpty()) {
+            return null;
+        }
+        return new SanPhamChiTiet(SanPhamDTO.fromEntity(sp.get()), SanPhamChiTietDTO.fromCollection(_sanPhamChiTietRepository.findSanPhamChiTietsBySanPham(sp.get())));
     }
 
     @Override
@@ -282,12 +286,41 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public ResponObject<String, APIStatus> themSanPham(SanPhamRequest sanPham, MultipartFile hinh1, MultipartFile hinh2) throws IOException {
-        return null;
+        SanPham sanPham = new SanPham();
+        sanPham.setNgayTao(LocalDateTime.now());
+        sanPham.setGiaBan(sanPhamRequest.getGiaBan());
+        sanPham.setSoLuongTon(0);
+        sanPham.setSoLuongDaBan(0);
+        sanPham.setSoLuongLoi(0);
+        sanPham.setMoTa(sanPhamRequest.getMoTa());
+        sanPham.setSoLuongTraHang(0);
+        sanPham.setTrangThai(TrangThaiSanPham.DANGBAN);
+        sanPham.setTenSanPham(sanPhamRequest.getTenSanPham());
+        sanPham.setGiaNhap(sanPhamRequest.getGiaNhap());
+        sanPham.setNhomSanPham(_nhomSanPhamRepo.findById(sanPhamRequest.getNhomSanPhamId()).get());
+        sanPham.setChatLieu(_chatLieuRepo.findById(sanPhamRequest.getChatLieuId()).get());
+        sanPham.setThietKe(_thietKeRepo.findById(sanPhamRequest.getThietKeId()).get());
+        sanPham.setHinhAnh1(CloudinaryUpload.uploadFile(hinh1));
+        sanPham.setHinhAnh2(CloudinaryUpload.uploadFile(hinh2));
+        HinhAnhSanPham hinhAnh1 = new HinhAnhSanPham();
+        hinhAnh1.setLinkHinhAnh(sanPham.getHinhAnh1());
+        hinhAnh1.setSanPham(sanPham);
+        hinhAnh1.setNgayTao(LocalDateTime.now());
+        HinhAnhSanPham hinhAnh2 = new HinhAnhSanPham();
+        hinhAnh2.setLinkHinhAnh(sanPham.getHinhAnh2());
+        hinhAnh2.setSanPham(sanPham);
+        hinhAnh2.setNgayTao(LocalDateTime.now());
+        _sanPhamRepository.save(sanPham);
+        _hinhAnhSanPhamRepo.save(hinhAnh1);
+        _hinhAnhSanPhamRepo.save(hinhAnh2);
+        sanPham.setMaSanPham("SP" + sanPham.getId());
+        _sanPhamRepository.save(sanPham);
+        return new ResponObject<String, APIStatus>("Thành công", APIStatus.THANHCONG, "Thành công");
     }
 
     @Override
     public SanPhamDTO laySanPhamById(Long sanPhamId) {
-        return null;
+        return SanPhamDTO.fromEntity(_sanPhamRepository.findById(sanPhamId).get());
     }
 
     @Override
@@ -297,6 +330,21 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<SanPhamDTO> capNhatSanPham(SanPhamRequest sanPhamRequest, MultipartFile multipartFile, MultipartFile multipartFile1) throws IOException {
-        return null;
+        SanPham sp = _sanPhamRepository.findById(sanPhamRequest.getId()).get();
+        if (multipartFile != null) {
+            sp.setHinhAnh1(CloudinaryUpload.uploadFile(multipartFile));
+            sp.setHinhAnh2(CloudinaryUpload.uploadFile(multipartFile1));
+        }
+        sp.setTenSanPham(sanPhamRequest.getTenSanPham());
+        sp.setGiaBan(sanPhamRequest.getGiaBan());
+        sp.setGiaNhap(sanPhamRequest.getGiaNhap());
+        sp.setNgayCapNhat(LocalDateTime.now());
+        sp.setMoTa(sanPhamRequest.getMoTa());
+        sp.setTrangThai(sanPhamRequest.getTrangThai());
+        sp.setThietKe(_thietKeRepo.findById(sanPhamRequest.getThietKeId()).get());
+        sp.setChatLieu(_chatLieuRepo.findById(sanPhamRequest.getChatLieuId()).get());
+        sp.setNhomSanPham(_nhomSanPhamRepo.findById(sanPhamRequest.getNhomSanPhamId()).get());
+        _sanPhamRepository.save(sp);
+        return layHetSanPham();
     }
 }
