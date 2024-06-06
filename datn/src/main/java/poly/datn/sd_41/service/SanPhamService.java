@@ -196,52 +196,90 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<MauSacDTO> layHetMauSac() {
-        return null;
+        return new Page<MauSacDTO>(MauSacDTO.fromCollection(_mauSacRepo.findAll()), 0, 10000);
     }
 
     @Override
     public Page<MauSacDTO> xoaMauSac(Long mauSacId) {
-        return null;
+        MauSac mauSac = _mauSacRepo.findById(mauSacId).get();
+        if (_sanPhamChiTietRepository.existsByMauSac(mauSac)) {
+            return null;
+        }
+        _mauSacRepo.deleteById(mauSacId);
+        return layHetMauSac();
     }
 
     @Override
     public Page<MauSacDTO> suaMauSac(MauSac mauSac) {
-        return null;
+        if (_mauSacRepo.existsByTenMauEquals(mauSac.getTenMau())) {
+            return null;
+        }
+        MauSac mauSacGoc = _mauSacRepo.findById(mauSac.getId()).get();
+        mauSacGoc.setTenMau(mauSac.getTenMau());
+        mauSacGoc.setNgayCapNhat(LocalDateTime.now());
+        _mauSacRepo.save(mauSacGoc);
+        return layHetMauSac();
     }
 
     @Override
     public Page<MauSacDTO> themMauSac(MauSac mauSac) {
-        return null;
+        if (_mauSacRepo.existsByTenMauEquals(mauSac.getTenMau())) {
+            return null;
+        }
+        mauSac.setNgayTao(LocalDateTime.now());
+        _mauSacRepo.save(mauSac);
+        mauSac.setMaMau("MS" + mauSac.getId());
+        _mauSacRepo.save(mauSac);
+        return layHetMauSac();
     }
 
     @Override
     public MauSacDTO layMauSacById(Long mauSacId) {
-        return null;
+        return MauSacDTO.fromEntity(_mauSacRepo.findById(mauSacId).get());
     }
 
     @Override
     public Page<KichThuocDTO> layHetKichThuoc() {
-        return null;
+        return new Page<KichThuocDTO>(KichThuocDTO.fromCollection(_kichThuocRepo.findAll()), 0, 10000);
     }
 
     @Override
     public Page<KichThuocDTO> xoaKichThuoc(Long kichThuocId) {
-        return null;
+        KichThuoc kichThuoc = _kichThuocRepo.findById(kichThuocId).get();
+        if (_sanPhamChiTietRepository.existsByKichThuoc(kichThuoc)) {
+            return null;
+        }
+        _kichThuocRepo.deleteById(kichThuocId);
+        return layHetKichThuoc();
     }
 
     @Override
     public Page<KichThuocDTO> suaKichThuoc(KichThuoc kichThuoc) {
-        return null;
+        if (_kichThuocRepo.existsByTenKichThuocEquals(kichThuoc.getTenKichThuoc())) {
+            return null;
+        }
+        KichThuoc kichThuocGoc = _kichThuocRepo.findById(kichThuoc.getId()).get();
+        kichThuocGoc.setTenKichThuoc(kichThuoc.getTenKichThuoc());
+        kichThuocGoc.setNgayCapNhat(LocalDateTime.now());
+        _kichThuocRepo.save(kichThuocGoc);
+        return layHetKichThuoc();
     }
 
     @Override
     public Page<KichThuocDTO> themKichThuoc(KichThuoc kichThuoc) {
-        return null;
+        if (_kichThuocRepo.existsByTenKichThuocEquals(kichThuoc.getTenKichThuoc())) {
+            return null;
+        }
+        kichThuoc.setNgayTao(LocalDateTime.now());
+        _kichThuocRepo.save(kichThuoc);
+        kichThuoc.setMaKichThuoc("MKT" + kichThuoc.getId());
+        _kichThuocRepo.save(kichThuoc);
+        return layHetKichThuoc();
     }
 
     @Override
     public KichThuocDTO layKichThuocById(Long kichThuocId) {
-        return null;
+        return KichThuocDTO.fromEntity(_kichThuocRepo.findById(kichThuocId).get());
     }
 
     @Override
