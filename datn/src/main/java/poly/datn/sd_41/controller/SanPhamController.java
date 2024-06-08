@@ -159,4 +159,19 @@ public class SanPhamController {
     public ResponseEntity<?> layKichThuocById(@RequestParam Long kichThuocId) {
         return ResponseEntity.ok(_sanPhamService.layKichThuocById(kichThuocId));
     }
+
+    @RequestMapping(value = "/themsanphamchitiet", method = RequestMethod.POST)
+    public ResponseEntity<?> themSanPhamChiTiet(@RequestBody SanPhamChiTietRequest sanPhamChiTietRequest) {
+        return ResponseEntity.ok(_sanPhamService.themSanPhamChiTiet(sanPhamChiTietRequest));
+    }
+
+    @RequestMapping(value = "/xoasanphamchitiet", method = RequestMethod.GET)
+    public ResponseEntity<?> xoaSanPhamChiTiet(@RequestParam Long sanPhamChiTietId) {
+        return ResponseEntity.ok(_sanPhamService.xoaSanPhamChiTiet(sanPhamChiTietId));
+    }
+
+    @RequestMapping(value = "/suasanphamchitiet", method = RequestMethod.POST)
+    public ResponseEntity<?> suaSanPhamChiTiet(@RequestBody SanPhamChiTietRequest sanPhamChiTietRequest) {
+        return ResponseEntity.ok(_sanPhamService.suaSanPhamChiTiet(sanPhamChiTietRequest));
+    }
 }

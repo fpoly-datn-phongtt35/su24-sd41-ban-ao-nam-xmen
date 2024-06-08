@@ -289,17 +289,75 @@ public class SanPhamService implements ISanPhamService {
 
     @Override
     public Page<SanPhamChiTietDTO> xoaSanPhamChiTiet(Long sanPhamChiTietId) {
-        return null;
+        try {
+            it.lab.entity.SanPhamChiTiet sanPhamChiTiet = _sanPhamChiTietRepository.findById(sanPhamChiTietId).get();
+            SanPham sanPham = sanPhamChiTiet.getSanPham();
+            sanPham.setSoLuongTon(sanPham.getSoLuongTon() - sanPhamChiTiet.getSoLuongTon());
+            _sanPhamChiTietRepository.deleteById(sanPhamChiTietId);
+            _sanPhamRepository.save(sanPham);
+            return laySanPhamChiTietCuaSanPham(sanPham.getId());
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Page<SanPhamChiTietDTO> suaSanPhamChiTiet(SanPhamChiTietRequest sanPhamChiTiet) {
-        return null;
+        spct = _sanPhamChiTietRepository.findById(sanPhamChiTiet.getId()).get();
+        if (spct.getKichThuoc().getId() == sanPhamChiTiet.getKichThuocId() && spct.getMauSac().getId() == sanPhamChiTiet.getMauSacId()) {
+
+        } else {
+            if (isSanPhamChiTietDaTonTai(sanPhamChiTiet).size() == 1) {
+                return new Page<SanPhamChiTietDTO>(null, 0, 10000);
+            }
+        }
+        it.lab.entity.SanPhamChiTiet sanPhamThayDoi = _sanPhamChiTietRepository.findById(sanPhamChiTiet.getId()).get();
+        SanPham sanPham = sanPhamThayDoi.getSanPham();
+        sanPham.setSoLuongTon(sanPham.getSoLuongTon() - sanPhamThayDoi.getSoLuongTon() + sanPhamChiTiet.getSoLuongTon());
+        sanPhamThayDoi.setSoLuongTon(sanPhamChiTiet.getSoLuongTon());
+        sanPham.setSoLuongLoi(sanPham.getSoLuongLoi() - sanPhamThayDoi.getSoLuongLoi() + sanPhamChiTiet.getSoLuongLoi());
+        sanPham.setSoLuongTraHang(sanPham.getSoLuongTraHang() - sanPhamThayDoi.getSoLuongTraHang() + sanPhamChiTiet.getSoLuongTraHang());
+        sanPhamThayDoi.setGiaNhap(sanPhamChiTiet.getGiaNhap());
+        sanPhamThayDoi.setGiaBan(sanPhamThayDoi.getGiaBan());
+        sanPhamThayDoi.setTrangThai(sanPhamChiTiet.getTrangThai());
+        sanPhamThayDoi.setNgayCapNhat(LocalDateTime.now());
+        sanPhamThayDoi.setSoLuongDaBan(sanPhamChiTiet.getSoLuongDaBan());
+        sanPhamThayDoi.setSoLuongLoi(sanPhamChiTiet.getSoLuongLoi());
+        sanPhamThayDoi.setSoLuongTraHang(sanPhamChiTiet.getSoLuongTraHang());
+        sanPhamThayDoi.setKichThuoc(_kichThuocRepo.findById(sanPhamChiTiet.getKichThuocId()).get());
+        sanPhamThayDoi.setMauSac(_mauSacRepo.findById(sanPhamChiTiet.getMauSacId()).get());
+        _sanPhamChiTietRepository.save(sanPhamThayDoi);
+        _sanPhamRepository.save(sanPham);
+        return laySanPhamChiTietCuaSanPham(sanPhamChiTiet.getSanPhamId());
     }
 
     @Override
     public Page<SanPhamChiTietDTO> themSanPhamChiTiet(SanPhamChiTietRequest sanPhamChiTiet) {
-        return null;
+        if (isSanPhamChiTietDaTonTai(sanPhamChiTiet).size() != 0) {
+            return new Page<SanPhamChiTietDTO>(null, 0, 10000);
+        }
+        SanPham sanPham = _sanPhamRepository.findById(sanPhamChiTiet.getSanPhamId()).get();
+        MauSac mauSac = _mauSacRepo.findById(sanPhamChiTiet.getMauSacId()).get();
+        KichThuoc kichThuoc = _kichThuocRepo.findById(sanPhamChiTiet.getKichThuocId()).get();
+        it.lab.entity.SanPhamChiTiet sanPhamMoi = new it.lab.entity.SanPhamChiTiet();
+        sanPhamMoi.setSanPham(_sanPhamRepository.findById(sanPhamChiTiet.getSanPhamId()).get());
+        sanPhamMoi.setMauSac(mauSac);
+        sanPhamMoi.setTenSanPham(sanPham.getTenSanPham() + " " + mauSac.getTenMau() + " " + kichThuoc.getTenKichThuoc());
+        sanPhamMoi.setKichThuoc(kichThuoc);
+        sanPhamMoi.setGiaBan(sanPham.getGiaBan());
+        sanPhamMoi.setGiaNhap(sanPham.getGiaNhap());
+        sanPhamMoi.setTrangThai(TrangThaiSanPhamChiTiet.CONHANG);
+        sanPhamMoi.setSoLuongTon(sanPhamChiTiet.getSoLuongTon());
+        sanPham.setSoLuongTon(sanPham.getSoLuongTon() + sanPhamMoi.getSoLuongTon());
+        sanPhamMoi.setSoLuongLoi(0);
+        sanPhamMoi.setSoLuongDaBan(0);
+        sanPhamMoi.setSoLuongTraHang(0);
+        sanPhamMoi.setHinhAnh(sanPham.getHinhAnh1());
+        sanPhamMoi.setNgayTao(LocalDateTime.now());
+        _sanPhamChiTietRepository.save(sanPhamMoi);
+        sanPhamMoi.setMaSanPham("SP" + sanPhamMoi.getId());
+        _sanPhamChiTietRepository.save(sanPhamMoi);
+        return laySanPhamChiTietCuaSanPham(sanPham.getId());
     }
 
     @Override
