@@ -31,4 +31,5 @@ public class NhomSanPham {
     private LocalDateTime ngayTao;
     @Column(name = "ngaycapnhat")
     private LocalDateTime ngayCapNhat;
+//    NguyenNhatQuynh
 }
