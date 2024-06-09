@@ -71,4 +71,5 @@ public class HoaDon {
     private List<HoaDonChiTiet> hoaDonChiTietList;
     @Column(name = "phigiaohang")
     private Double phiGiaoHang;
+//    Nguyen Nhat Quynh
 }
