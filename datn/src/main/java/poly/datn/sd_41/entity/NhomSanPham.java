@@ -32,4 +32,5 @@ public class NhomSanPham {
     @Column(name = "ngaycapnhat")
     private LocalDateTime ngayCapNhat;
 //    NguyenNhatQuynh
+    //    NguyenNhatQuynh
 }
