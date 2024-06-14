@@ -6,4 +6,5 @@ import poly.datn.sd_41.entity.KichThuoc;
 
 @Repository
 public interface KichThuocRepo extends JpaRepository<KichThuoc, Long> {
+    public boolean existsByTenKichThuocEquals(String ten);
 }
